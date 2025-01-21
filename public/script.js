@@ -20,7 +20,16 @@ async function initializePage() {
         console.error('Error initializing page:', error);
     }
 }
-
+supabase
+    .channel('public:test_messages')
+    .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'test_messages' },
+        (payload) => {
+            console.log('Real-time event received:', payload);
+        }
+    )
+    .subscribe();
 initializePage();
 
 // Function to submit a new question
