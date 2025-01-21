@@ -1,7 +1,8 @@
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-const supabaseUrl = 'https://aqrimvmnaeehptmsealp.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFxcmltdm1uYWVlaHB0bXNlYWxwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzczNjQwMjgsImV4cCI6MjA1Mjk0MDAyOH0.nz0-xavEoPp_JwQkTWfjP0ZMomPnnlRwJrZdipH_I4M';
+// Initialize Supabase
+const supabaseUrl = 'https://aqrimvmnaeehptmsealp.supabase.co'; // Replace with your Supabase URL
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFxcmltdm1uYWVlaHB0bXNlYWxwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzczNjQwMjgsImV4cCI6MjA1Mjk0MDAyOH0.nz0-xavEoPp_JwQkTWfjP0ZMomPnnlRwJrZdipH_I4M'; // Replace with your Supabase anon/public key
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 console.log('Supabase initialized:', supabase);
@@ -9,7 +10,7 @@ console.log('Supabase initialized:', supabase);
 let questions = [];
 let sortBy = 'latest';
 
-// Fetch historical questions and ensure subscription is set up only once
+// Fetch historical questions and set up real-time subscription
 async function initializePage() {
     try {
         await fetchQuestions();
@@ -39,12 +40,13 @@ async function submitQuestion() {
             .select();
 
         if (error) {
-            console.error('Error in submitting question:', error);
+            console.error('Error submitting question:', error);
             alert('Failed to submit question: ' + error.message);
             return;
         }
 
-        questionInput.value = '';
+        questionInput.value = ''; // Clear input
+        console.log('Question submitted:', data);
     } catch (error) {
         console.error('Unexpected error:', error);
         alert('An unexpected error occurred while submitting the question.');
@@ -53,9 +55,8 @@ async function submitQuestion() {
 
 // Function to upvote a question
 async function upvoteQuestion(id) {
-    const userToken = getUserToken();
-
     try {
+        // Fetch the current question
         const { data: question, error: fetchError } = await supabase
             .from('questions')
             .select('*')
@@ -67,12 +68,14 @@ async function upvoteQuestion(id) {
             return;
         }
 
+        // Check if the user has already voted
         const hasVoted = localStorage.getItem(`voted_${id}`);
         if (hasVoted) {
             alert('You have already voted for this question.');
             return;
         }
 
+        // Update the upvote count
         const { data: updatedQuestion, error: updateError } = await supabase
             .from('questions')
             .update({ upvotes: question.upvotes + 1 })
@@ -84,9 +87,11 @@ async function upvoteQuestion(id) {
             return;
         }
 
+        // Update the UI
         questions = questions.map(q => q.id === id ? updatedQuestion[0] : q);
         renderQuestions();
 
+        // Mark the user as having voted
         localStorage.setItem(`voted_${id}`, 'true');
         localStorage.setItem('userInteracted', 'true');
         showSubscriptionPrompt();
@@ -96,7 +101,7 @@ async function upvoteQuestion(id) {
     }
 }
 
-// Function to fetch questions from the server
+// Function to fetch questions from Supabase
 async function fetchQuestions() {
     try {
         const { data, error } = await supabase
@@ -111,8 +116,8 @@ async function fetchQuestions() {
 
         questions = data || [];
         renderQuestions();
-    } catch (err) {
-        console.error('Unexpected error fetching questions:', err);
+    } catch (error) {
+        console.error('Unexpected error fetching questions:', error);
     }
 }
 
