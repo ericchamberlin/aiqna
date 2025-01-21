@@ -9,11 +9,10 @@ body {
     font-size: 1rem;
     line-height: 1.5;
 }
-
 .container {
     width: 90%;
-    max-width: 1200px;
-    margin: 0 auto;
+    max-width: 600px; /* Narrower container for mobile */
+    margin: 0 auto; /* Center the container */
     padding: 1rem;
 }
 
@@ -36,13 +35,14 @@ body {
 }
 
 .question-form {
-    width: 100%;
-    max-width: 400px;
-    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center the input and button */
 }
 
 .question-form input {
     width: 100%;
+    max-width: 400px; /* Limit input width */
     padding: 0.5rem;
     font-size: 1rem;
     margin-bottom: 0.5rem;
@@ -124,14 +124,14 @@ body {
 .button-section {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: center; /* Center buttons */
     padding: 1rem;
     background-color: white;
 }
 
 .button-section button {
     width: 100%;
-    max-width: 200px;
+    max-width: 200px; /* Limit button width */
     padding: 0.5rem;
     font-size: 1rem;
     background-color: #007BFF;
@@ -164,7 +164,9 @@ body {
     font-size: 1.5rem;
     margin-bottom: 1rem;
 }
-
+.vocabulary-section {
+    column-count: 1; /* Single column for mobile */
+}
 .vocabulary-section dt {
     font-weight: bold;
     margin-top: 1rem;
@@ -243,18 +245,22 @@ body {
 }
 
 /* Media Queries */
-@media (max-width: 600px) {
+@media (min-width: 1024px) {
+    .container {
+        max-width: 800px; /* Slightly wider container for desktop */
+    }
+
     .button-section {
-        flex-direction: column;
+        flex-direction: row; /* Buttons in a row for desktop */
+        justify-content: center;
     }
 
     .button-section button {
-        max-width: 100%;
+        margin: 0 1rem; /* Add horizontal spacing between buttons */
     }
 
-    .info-panel,
-    .subscription-prompt {
-        width: 95%;
-        padding: 1rem;
+    .vocabulary-section {
+        column-count: 2; /* Two columns for desktop */
+        column-gap: 2rem;
     }
 }
