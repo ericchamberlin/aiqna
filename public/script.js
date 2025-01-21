@@ -33,22 +33,17 @@ async function submitQuestion() {
     }
 
     try {
-        const response = await fetch('http://localhost:4000/submit-question', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ text: questionText }),
-        });
+        const { data, error } = await supabase
+            .from('questions')
+            .insert([{ text: questionText, upvotes: 0 }])
+            .select();
 
-        if (!response.ok) {
-            const error = await response.text();
+        if (error) {
             console.error('Error in submitting question:', error);
-            alert('Failed to submit question: ' + error);
+            alert('Failed to submit question: ' + error.message);
             return;
         }
 
-        // Clear the input field
         questionInput.value = '';
     } catch (error) {
         console.error('Unexpected error:', error);
@@ -59,21 +54,45 @@ async function submitQuestion() {
 // Function to upvote a question
 async function upvoteQuestion(id) {
     const userToken = getUserToken();
-    const response = await fetch('http://localhost:4000/upvote-question', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ id, userToken }),
-    });
-    if (response.ok) {
-        const updatedQuestion = await response.json();
-        questions = questions.map(question => question.id === id ? updatedQuestion : question);
+
+    try {
+        const { data: question, error: fetchError } = await supabase
+            .from('questions')
+            .select('*')
+            .eq('id', id)
+            .single();
+
+        if (fetchError) {
+            console.error('Error fetching question:', fetchError);
+            return;
+        }
+
+        const hasVoted = localStorage.getItem(`voted_${id}`);
+        if (hasVoted) {
+            alert('You have already voted for this question.');
+            return;
+        }
+
+        const { data: updatedQuestion, error: updateError } = await supabase
+            .from('questions')
+            .update({ upvotes: question.upvotes + 1 })
+            .eq('id', id)
+            .select();
+
+        if (updateError) {
+            console.error('Error upvoting question:', updateError);
+            return;
+        }
+
+        questions = questions.map(q => q.id === id ? updatedQuestion[0] : q);
         renderQuestions();
+
+        localStorage.setItem(`voted_${id}`, 'true');
         localStorage.setItem('userInteracted', 'true');
         showSubscriptionPrompt();
-    } else {
-        alert('You have already voted for this question');
+    } catch (error) {
+        console.error('Unexpected error:', error);
+        alert('An unexpected error occurred while upvoting the question.');
     }
 }
 
@@ -104,22 +123,17 @@ function renderQuestions() {
 
     let sortedQuestions;
 
-    // Sort questions based on the selected option
     if (sortBy === 'latest') {
-        // Sort by created_at (newest first)
         sortedQuestions = questions.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
     } else if (sortBy === 'popular') {
-        // Sort by upvotes (descending order)
         sortedQuestions = questions.sort((a, b) => b.upvotes - a.upvotes);
     }
 
-    // Add fire emoji to the top 3 questions
     sortedQuestions.forEach((question, index) => {
         const listItem = document.createElement('li');
         listItem.className = 'question-item';
 
-        // Add fire emoji if the question is in the top 3
-        const fireEmoji = index < 3 && sortBy === 'popular' ? '&#128293;' : ''; // Only show fire emoji for popular sorting
+        const fireEmoji = index < 3 && sortBy === 'popular' ? '&#128293;' : '';
 
         listItem.innerHTML = `
             <span>${question.text} ${fireEmoji}</span>
@@ -187,18 +201,22 @@ function closeSubscriptionPrompt() {
 async function subscribeUser() {
     const email = document.getElementById('subscriptionEmail').value.trim();
     if (email) {
-        const response = await fetch('http://localhost:4000/subscribe', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ email }),
-        });
-        if (response.ok) {
+        try {
+            const { error } = await supabase
+                .from('subscribers')
+                .insert([{ email }]);
+
+            if (error) {
+                console.error('Error subscribing user:', error);
+                alert('Failed to subscribe. Please try again.');
+                return;
+            }
+
             alert('Thank you for subscribing!');
             closeSubscriptionPrompt();
-        } else {
-            alert('Failed to subscribe. Please try again.');
+        } catch (error) {
+            console.error('Unexpected error:', error);
+            alert('An unexpected error occurred while subscribing.');
         }
     } else {
         alert('Please enter a valid email address.');
