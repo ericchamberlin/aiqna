@@ -268,3 +268,30 @@ body {
         width: 90%;
     }
 }
+
+
+.video-container {
+    position: relative;
+    width: 100%;
+    max-width: 560px;
+    margin: 0 auto;
+    padding-top: 20px;
+}
+
+.video-container iframe {
+    width: 100%;
+    height: 315px;
+    max-width: 560px;
+}
+
+@media (max-width: 600px) {
+    .video-container {
+        width: 100%;
+        padding: 20px 10px;
+    }
+    
+    .video-container iframe {
+        height: 56.25vw; /* Maintains 16:9 aspect ratio */
+    }
+}
+
