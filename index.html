@@ -144,7 +144,14 @@
         <button onclick="subscribeUser()">Subscribe</button>
         <button onclick="closeSubscriptionPrompt()">No Thanks</button>
     </div>
-
-    <script src="./script.js"></script>
+    <!-- Replace the script section -->
+        <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/dist/umd/supabase.min.js"></script>
+        <script>
+            const supabaseUrl = 'https://aqrimvmnaeehptmsealp.supabase.co';
+            const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFxcmltdm1uYWVlaHB0bXNlYWxwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzczNjQwMjgsImV4cCI6MjA1Mjk0MDAyOH0.nz0-xavEoPp_JwQkTWfjP0ZMomPnnlRwJrZdipH_I4M';
+            const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+            window.supabase = supabase;
+        </script>
+        <script src="script.js"></script>
 </body>
 </html>
