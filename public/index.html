@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Questions and Answers</title>
+    <title>AI Question of the Week</title>
     <!-- Include your CSS file here -->
-    <link rel="stylesheet" href="./styles.css">
+    <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
     <div class="top-section">
@@ -32,7 +32,7 @@
     <div class="button-section">
         <button onclick="showContent('ai-vocabulary')">AI Vocabulary</button>
         <button onclick="showContent('ai-answers')">AI Answers</button>
-        <button onclick="showContent('ai-placeholder')">AI Tutorials</button>
+        <button onclick="showContent('ai-placeholder')">AI (Placeholder)</button>
     </div>
     <div class="bottom-section">
         <div id="ai-vocabulary" class="content-section">
@@ -144,14 +144,7 @@
         <button onclick="subscribeUser()">Subscribe</button>
         <button onclick="closeSubscriptionPrompt()">No Thanks</button>
     </div>
-    <!-- Replace the script section -->
-        <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/dist/umd/supabase.min.js"></script>
-        <script>
-            const supabaseUrl = 'https://aqrimvmnaeehptmsealp.supabase.co';
-            const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFxcmltdm1uYWVlaHB0bXNlYWxwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzczNjQwMjgsImV4cCI6MjA1Mjk0MDAyOH0.nz0-xavEoPp_JwQkTWfjP0ZMomPnnlRwJrZdipH_I4M';
-            const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
-            window.supabase = supabase;
-        </script>
-        <script src="script.js"></script>
+
+    <script type="module" src="/script.js"></script>
 </body>
 </html>

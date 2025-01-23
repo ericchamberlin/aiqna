@@ -1,0 +1,266 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #f0f0f0;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+.container {
+    width: 90%;
+    max-width: 600px; /* Narrower container for mobile */
+    margin: 0 auto; /* Center the container */
+    padding: 1rem;
+}
+
+.header-image {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+/* Top Section */
+.top-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    background-color: white;
+}
+
+.question-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center the input and button */
+}
+
+.question-form input {
+    width: 100%;
+    max-width: 400px; /* Limit input width */
+    padding: 0.5rem;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.question-form button {
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 1rem;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.question-form button:hover {
+    background-color: #0056b3;
+}
+
+.sort-buttons {
+    margin-bottom: 1rem;
+}
+
+.sort-buttons button {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    margin-right: 0.5rem;
+}
+
+.sort-buttons button:hover {
+    background-color: #0056b3;
+}
+
+.question-list {
+    list-style-type: none;
+    padding: 0;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.question-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem;
+    border-bottom: 1px solid #ddd;
+}
+
+.upvote-button {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+}
+
+.upvote-button:hover {
+    background-color: #0056b3;
+}
+
+.scroll-text {
+    text-align: center;
+    font-size: 0.875rem;
+    color: #666;
+    margin: 1rem 0;
+}
+
+.divider {
+    height: 1px;
+    background-color: #ddd;
+    width: 100%;
+    margin: 1rem 0;
+}
+
+/* Button Section */
+.button-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center buttons */
+    padding: 1rem;
+    background-color: white;
+}
+
+.button-section button {
+    width: 100%;
+    max-width: 200px; /* Limit button width */
+    padding: 0.5rem;
+    font-size: 1rem;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin: 0.5rem 0;
+}
+
+.button-section button:hover {
+    background-color: #0056b3;
+}
+
+/* Bottom Section */
+.bottom-section {
+    flex: 2;
+    padding: 1rem;
+    background-color: white;
+}
+
+.content-section {
+    display: none;
+}
+
+.content-section.active {
+    display: block;
+}
+
+.vocabulary-section h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+.vocabulary-section {
+    column-count: 1; /* Single column for mobile */
+}
+.vocabulary-section dt {
+    font-weight: bold;
+    margin-top: 1rem;
+}
+
+.vocabulary-section dd {
+    margin-left: 1rem;
+    margin-bottom: 1rem;
+}
+
+.video-container {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+    height: 0;
+    overflow: hidden;
+}
+
+.video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* Info Panel and Subscription Prompt */
+.info-panel,
+.subscription-prompt {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgb(52, 63, 229);
+    border: 1px solid #130303;
+    padding: 2rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    width: 90%;
+    max-width: 600px;
+    text-align: center;
+    color: white;
+}
+
+.info-panel h2,
+.subscription-prompt h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.info-panel p,
+.subscription-prompt p {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+}
+
+.info-panel button,
+.subscription-prompt button {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    margin-top: 1rem;
+}
+
+.info-panel button:hover,
+.subscription-prompt button:hover {
+    background-color: #0056b3;
+}
+
+.subscription-prompt input {
+    width: 100%;
+    padding: 0.5rem;
+    margin-top: 1rem;
+}
+
+/* Media Queries */
+@media (min-width: 1024px) {
+    .container {
+        max-width: 800px; /* Slightly wider container for desktop */
+    }
+
+    .button-section {
+        flex-direction: row; /* Buttons in a row for desktop */
+        justify-content: center;
+    }
+
+    .button-section button {
+        margin: 0 1rem; /* Add horizontal spacing between buttons */
+    }
+
+    .vocabulary-section {
+        column-count: 2; /* Two columns for desktop */
+        column-gap: 2rem;
+    }
+}
