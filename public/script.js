@@ -36,6 +36,7 @@ initializePage();
 async function submitQuestion() {
     const questionInput = document.getElementById('questionInput');
     const questionText = questionInput.value.trim();
+    const sessionId = getUserToken();  // Use existing getUserToken function
 
     if (!questionText) {
         alert('Please enter a question.');
@@ -45,7 +46,11 @@ async function submitQuestion() {
     try {
         const { data, error } = await supabase
             .from('questions')
-            .insert([{ text: questionText, upvotes: 0 }])
+            .insert([{ 
+                text: questionText, 
+                upvotes: 0,
+                session_id: sessionId  // Add session ID
+            }])
             .select();
 
         if (error) {
@@ -54,7 +59,7 @@ async function submitQuestion() {
             return;
         }
 
-        questionInput.value = ''; // Clear input
+        questionInput.value = '';
         console.log('Question submitted:', data);
     } catch (error) {
         console.error('Unexpected error:', error);
@@ -133,6 +138,7 @@ async function fetchQuestions() {
 // Function to render questions on the page
 function renderQuestions() {
     const questionList = document.getElementById('questionList');
+    const sessionId = getUserToken();
     questionList.innerHTML = '';
 
     let sortedQuestions;
@@ -148,10 +154,15 @@ function renderQuestions() {
         listItem.className = 'question-item';
 
         const fireEmoji = index < 3 && sortBy === 'popular' ? '&#128293;' : '';
+        const deleteButton = question.session_id === sessionId ? 
+            `<button class="delete-button" onclick="deleteQuestion('${question.id}')">Delete</button>` : '';
 
         listItem.innerHTML = `
             <span>${question.text} ${fireEmoji}</span>
-            <button class="upvote-button" onclick="upvoteQuestion('${question.id}')">Upvote (${question.upvotes})</button>
+            <div class="button-group">
+                <button class="upvote-button" onclick="upvoteQuestion('${question.id}')">Upvote (${question.upvotes})</button>
+                ${deleteButton}
+            </div>
         `;
         questionList.appendChild(listItem);
     });
@@ -284,3 +295,32 @@ window.closeInfoPanel = closeInfoPanel;
 window.closeSubscriptionPrompt = closeSubscriptionPrompt;
 window.subscribeUser = subscribeUser;
 window.upvoteQuestion = upvoteQuestion;
+// Function to delete a question
+async function deleteQuestion(id) {
+    try {
+        const { error } = await supabase
+            .from('questions')
+            .delete()
+            .eq('id', id)
+            .eq('session_id', getUserToken());  // Only delete if session matches
+
+        if (error) {
+            console.error('Error deleting question:', error);
+            alert('Failed to delete question');
+            return;
+        }
+    } catch (error) {
+        console.error('Unexpected error:', error);
+        alert('An unexpected error occurred while deleting the question.');
+    }
+}
+
+// Attach functions to the window object
+window.submitQuestion = submitQuestion;
+window.sortQuestions = sortQuestions;
+window.showContent = showContent;
+window.closeInfoPanel = closeInfoPanel;
+window.closeSubscriptionPrompt = closeSubscriptionPrompt;
+window.subscribeUser = subscribeUser;
+window.upvoteQuestion = upvoteQuestion;
+window.deleteQuestion = deleteQuestion;  // Add this line

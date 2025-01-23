@@ -49,13 +49,14 @@ body {
 }
 
 .question-form button {
-    width: 100%;
-    padding: 0.5rem;
-    font-size: 1rem;
     background-color: #007BFF;
     color: white;
     border: none;
+    padding: 10px 20px;  /* Match button-section button padding */
     cursor: pointer;
+    font-size: 16px;
+    width: auto;  /* Allow button to size naturally */
+    min-width: 100px;  /* Slightly wider to accommodate "Submit" text */
 }
 
 .question-form button:hover {
@@ -179,8 +180,10 @@ body {
 
 .video-container {
     position: relative;
-    padding-bottom: 56.25%; /* 16:9 aspect ratio */
-    height: 0;
+    width: 100%;
+    max-width: 480px;  /* Standard YouTube thumbnail width */
+    margin: 0 auto;
+    padding-bottom: 270px;  /* Fixed height for 16:9 ratio */
     overflow: hidden;
 }
 
@@ -264,3 +267,24 @@ body {
         column-gap: 2rem;
     }
 }
+
+
+.delete-button {
+    background-color: #dc3545;  /* Red color for delete */
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    margin-left: 0.5rem;
+    display: none;  /* Hidden by default */
+}
+
+.delete-button:hover {
+    background-color: #c82333;
+}
+
+.delete-button.visible {
+    display: inline-block;
+}
+
+
