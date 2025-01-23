@@ -48,15 +48,14 @@ body {
     margin-bottom: 0.5rem;
 }
 
-.question-form button {
-    background-color: #007BFF;
-    color: white;
-    border: none;
-    padding: 10px 20px;  /* Match button-section button padding */
-    cursor: pointer;
-    font-size: 16px;
-    width: auto;  /* Allow button to size naturally */
-    min-width: 100px;  /* Slightly wider to accommodate "Submit" text */
+
+.question-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 1rem;  /* Add space for divider */
+    border-bottom: 1px solid #ddd;  /* Add divider line */
+    padding-bottom: 1rem;  /* Space between content and divider */
 }
 
 .question-form button:hover {
@@ -64,11 +63,12 @@ body {
 }
 
 .sort-buttons {
+    margin-top: 1rem;  /* Space after divider */
     margin-bottom: 1rem;
 }
 
 .sort-buttons button {
-    background-color: #007BFF;
+    background-color: #024BAD;
     color: white;
     border: none;
     padding: 0.5rem 1rem;
@@ -96,7 +96,7 @@ body {
 }
 
 .upvote-button {
-    background-color: #007BFF;
+    background-color: #024BAD;
     color: white;
     border: none;
     padding: 0.5rem 1rem;
@@ -135,7 +135,7 @@ body {
     max-width: 200px; /* Limit button width */
     padding: 0.5rem;
     font-size: 1rem;
-    background-color: #007BFF;
+    background-color: #024BAD;
     color: white;
     border: none;
     cursor: pointer;
@@ -226,19 +226,14 @@ body {
     margin-bottom: 1rem;
 }
 
-.info-panel button,
-.subscription-prompt button {
-    background-color: #007BFF;
-    color: white;
-    border: none;
-    padding: 0.5rem 1rem;
-    cursor: pointer;
-    margin-top: 1rem;
-}
-
+/* Change all hover states from #0056b3 to darker shade of #024BAD */
+.question-form button:hover,
+.sort-buttons button:hover,
+.upvote-button:hover,
+.button-section button:hover,
 .info-panel button:hover,
 .subscription-prompt button:hover {
-    background-color: #0056b3;
+    background-color: #013b87;
 }
 
 .subscription-prompt input {
