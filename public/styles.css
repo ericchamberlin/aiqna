@@ -20,24 +20,37 @@ body {
     max-width: 100%;
     height: auto;
     display: block;
-    margin: 0;  /* Remove margin */
-}
-
-.top-section {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    padding: 0.25rem;  /* Further reduce padding */
-    background-color: white;
+    margin: 0 auto;  /* Re-add center alignment */
+    width: 80%;  /* Control width of header */
 }
 
 .question-form {
-    margin-bottom: 0.25rem;  /* Reduce margin */
-    padding-bottom: 0.25rem;  /* Reduce padding */
+    width: 100%;  /* Ensure full width for proper centering */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 0.25rem;
+    padding-bottom: 0.25rem;
 }
 
+.question-form input {
+    width: 90%;  /* Adjust input width */
+    max-width: 400px;
+    padding: 0.5rem;
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+}
+
+.scroll-text {
+    text-align: center;
+    font-size: 0.875rem;
+    color: #666;
+    margin: 0.25rem 0;  /* Reduce margin significantly */
+}
+
+.divider {
+    margin: 0.25rem 0;  /* Reduce margin around divider */
+}
 .divider {
     height: 1px;
     background-color: #ddd;
