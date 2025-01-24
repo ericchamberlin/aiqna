@@ -326,31 +326,26 @@ window.subscribeUser = subscribeUser;
 window.upvoteQuestion = upvoteQuestion;
 window.deleteQuestion = deleteQuestion;  // Add this line
 // Function to fetch and render content sections
+// Replace Supabase initialization with Airtable
+import Airtable from 'airtable';
+const base = new Airtable({apiKey: 'patDX2MYid5ZePcvo.17f61e3a9f5a87da9c0a81ed4d0b08a3c40806d0752d904091d88076374054f4'}).base('appeduCaJwHiTLI12');
+
 async function fetchContentSections() {
     try {
-        const { data: sections, error } = await supabase
-            .from('content_sections')
-            .select('*')
-            .eq('active', true)
-            .order('order', { ascending: true });
-
-        if (error) {
-            console.error('Error fetching content sections:', error);
-            return;
-        }
-
-        // Generate buttons
-        const buttonSection = document.querySelector('.button-section');
-        buttonSection.innerHTML = ''; // Clear existing buttons
+        const sections = await base('Content').select().all();
         
-        // Generate content containers
+        // Generate buttons and content containers
+        const buttonSection = document.querySelector('.button-section');
         const bottomSection = document.querySelector('.bottom-section');
-        bottomSection.innerHTML = ''; // Clear existing content
+        buttonSection.innerHTML = '';
+        bottomSection.innerHTML = '';
 
         sections.forEach(section => {
+            const fields = section.fields;
+            
             // Create button
             const button = document.createElement('button');
-            button.textContent = section.title;
+            button.textContent = fields.title;
             button.onclick = () => showContent(`section_${section.id}`);
             buttonSection.appendChild(button);
 
@@ -359,30 +354,55 @@ async function fetchContentSections() {
             contentDiv.id = `section_${section.id}`;
             contentDiv.className = 'content-section';
 
-            if (section.type === 'video') {
+            if (fields.type === 'tutorial') {
                 contentDiv.innerHTML = `
                     <div class="container">
                         <div class="video-container">
-                            <iframe src="${section.content}" 
+                            <iframe src="${fields.videoUrl}" 
                                     frameborder="0" 
                                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                                     allowfullscreen>
                             </iframe>
                         </div>
                     </div>`;
-            } else {
-                contentDiv.innerHTML = `
-                    <div class="container">
-                        ${section.content}
-                    </div>`;
+            } else if (fields.type === 'vocabulary') {
+                contentDiv.innerHTML = generateVocabularyHTML(fields);
+            } else if (fields.type === 'answers') {
+                contentDiv.innerHTML = generateAnswersHTML(fields);
             }
 
             bottomSection.appendChild(contentDiv);
         });
 
     } catch (error) {
-        console.error('Unexpected error:', error);
+        console.error('Error fetching content:', error);
     }
+}
+
+function generateVocabularyHTML(fields) {
+    return `
+        <div class="vocabulary-section">
+            <h2>AI Vocabulary</h2>
+            <dl>
+                ${fields.terms.map(term => `
+                    <dt>${term.name}</dt>
+                    <dd>${term.definition}</dd>
+                `).join('')}
+            </dl>
+        </div>
+    `;
+}
+
+function generateAnswersHTML(fields) {
+    return `
+        <div class="answers-section">
+            <h2>Common AI Questions</h2>
+            ${fields.qa.map(item => `
+                <h3>${item.question}</h3>
+                <p>${item.answer}</p>
+            `).join('')}
+        </div>
+    `;
 }
 
 // Call this function when page loads
