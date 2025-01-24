@@ -284,5 +284,34 @@ body {
 .delete-button.visible {
     display: inline-block;
 }
+.admin-login {
+    max-width: 400px;
+    margin: 100px auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.admin-login input {
+    width: 100%;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+}
+.section-editor {
+    margin-top: 2rem;
+}
+
+.section-editor select,
+.section-editor textarea {
+    width: 100%;
+    margin: 1rem 0;
+    padding: 0.5rem;
+}
+
+.section-editor textarea {
+    min-height: 200px;
+    font-family: monospace;
+}
 
 

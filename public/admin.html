@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Q&A Admin</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container admin-panel">
+        <h1>Content Management</h1>
+        
+        <div class="section-editor">
+            <h2>Edit Section Content</h2>
+            <select id="sectionSelect">
+                <option value="AI Vocabulary">AI Vocabulary</option>
+                <option value="AI Answers">AI Answers</option>
+                <option value="AI Tutorials">AI Tutorials</option>
+            </select>
+            
+            <textarea id="contentEditor" rows="10"></textarea>
+            
+            <button onclick="updateContent()">Update Content</button>
+        </div>
+    </div>
+
+    <script src="admin.js"></script>
+</body>
+</html>
