@@ -12,8 +12,8 @@ async function handleLogin(event) {
     const hashArray = Array.from(new Uint8Array(hashedPassword));
     const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
     
-    // Compare with your stored hash (replace with your password hash)
-    if (hashHex === 'YOUR_PASSWORD_HASH') {
+    // Compare with your stored hash
+    if (password === 'LaN3ig32025!') {  // For now, direct comparison
         sessionStorage.setItem('adminAuthenticated', 'true');
         window.location.href = 'admin.html';
     } else {
