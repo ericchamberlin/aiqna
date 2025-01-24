@@ -14,6 +14,7 @@ let sortBy = 'latest';
 async function initializePage() {
     try {
         await fetchQuestions();
+        await fetchContentSections();  // Add this line
         setupRealTimeSubscription();
         console.log('Page initialized successfully');
     } catch (error) {
@@ -324,3 +325,65 @@ window.closeSubscriptionPrompt = closeSubscriptionPrompt;
 window.subscribeUser = subscribeUser;
 window.upvoteQuestion = upvoteQuestion;
 window.deleteQuestion = deleteQuestion;  // Add this line
+// Function to fetch and render content sections
+async function fetchContentSections() {
+    try {
+        const { data: sections, error } = await supabase
+            .from('content_sections')
+            .select('*')
+            .eq('active', true)
+            .order('order', { ascending: true });
+
+        if (error) {
+            console.error('Error fetching content sections:', error);
+            return;
+        }
+
+        // Generate buttons
+        const buttonSection = document.querySelector('.button-section');
+        buttonSection.innerHTML = ''; // Clear existing buttons
+        
+        // Generate content containers
+        const bottomSection = document.querySelector('.bottom-section');
+        bottomSection.innerHTML = ''; // Clear existing content
+
+        sections.forEach(section => {
+            // Create button
+            const button = document.createElement('button');
+            button.textContent = section.title;
+            button.onclick = () => showContent(`section_${section.id}`);
+            buttonSection.appendChild(button);
+
+            // Create content section
+            const contentDiv = document.createElement('div');
+            contentDiv.id = `section_${section.id}`;
+            contentDiv.className = 'content-section';
+
+            if (section.type === 'video') {
+                contentDiv.innerHTML = `
+                    <div class="container">
+                        <div class="video-container">
+                            <iframe src="${section.content}" 
+                                    frameborder="0" 
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                    allowfullscreen>
+                            </iframe>
+                        </div>
+                    </div>`;
+            } else {
+                contentDiv.innerHTML = `
+                    <div class="container">
+                        ${section.content}
+                    </div>`;
+            }
+
+            bottomSection.appendChild(contentDiv);
+        });
+
+    } catch (error) {
+        console.error('Unexpected error:', error);
+    }
+}
+
+// Call this function when page loads
+initializePage();
