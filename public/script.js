@@ -327,25 +327,36 @@ window.upvoteQuestion = upvoteQuestion;
 window.deleteQuestion = deleteQuestion;  // Add this line
 // Function to fetch and render content sections
 // Replace Supabase initialization with Airtable
-import Airtable from 'airtable';
-const base = new Airtable({apiKey: 'patDX2MYid5ZePcvo.17f61e3a9f5a87da9c0a81ed4d0b08a3c40806d0752d904091d88076374054f4'}).base('appeduCaJwHiTLI12');
+// Remove these lines
+// import Airtable from 'airtable';
+// const base = new Airtable({apiKey: '...'}).base('...');
 
+// Restore the original fetchContentSections function
 async function fetchContentSections() {
     try {
-        const sections = await base('Content').select().all();
-        
-        // Generate buttons and content containers
+        const { data: sections, error } = await supabase
+            .from('content_sections')
+            .select('*')
+            .eq('active', true)
+            .order('order', { ascending: true });
+
+        if (error) {
+            console.error('Error fetching content sections:', error);
+            return;
+        }
+
+        // Generate buttons
         const buttonSection = document.querySelector('.button-section');
+        buttonSection.innerHTML = ''; // Clear existing buttons
+        
+        // Generate content containers
         const bottomSection = document.querySelector('.bottom-section');
-        buttonSection.innerHTML = '';
-        bottomSection.innerHTML = '';
+        bottomSection.innerHTML = ''; // Clear existing content
 
         sections.forEach(section => {
-            const fields = section.fields;
-            
             // Create button
             const button = document.createElement('button');
-            button.textContent = fields.title;
+            button.textContent = section.title;
             button.onclick = () => showContent(`section_${section.id}`);
             buttonSection.appendChild(button);
 
@@ -353,24 +364,7 @@ async function fetchContentSections() {
             const contentDiv = document.createElement('div');
             contentDiv.id = `section_${section.id}`;
             contentDiv.className = 'content-section';
-
-            if (fields.type === 'tutorial') {
-                contentDiv.innerHTML = `
-                    <div class="container">
-                        <div class="video-container">
-                            <iframe src="${fields.videoUrl}" 
-                                    frameborder="0" 
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                                    allowfullscreen>
-                            </iframe>
-                        </div>
-                    </div>`;
-            } else if (fields.type === 'vocabulary') {
-                contentDiv.innerHTML = generateVocabularyHTML(fields);
-            } else if (fields.type === 'answers') {
-                contentDiv.innerHTML = generateAnswersHTML(fields);
-            }
-
+            contentDiv.innerHTML = section.content;
             bottomSection.appendChild(contentDiv);
         });
 
