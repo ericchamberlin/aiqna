@@ -203,13 +203,38 @@ function closeInfoPanel() {
 }
 
 // Function to show content sections
-function showContent(sectionId) {
-    const sections = document.querySelectorAll('.content-section');
-    sections.forEach(section => {
-        section.classList.remove('active');
-    });
-    document.getElementById(sectionId).classList.add('active');
+// Add these functions
+function showModal(content) {
+    const modal = document.getElementById('contentModal');
+    const modalBody = modal.querySelector('.modal-body');
+    modalBody.innerHTML = content;
+    modal.style.display = 'block';
+    document.body.style.overflow = 'hidden'; // Prevent background scrolling
 }
+
+function closeModal() {
+    const modal = document.getElementById('contentModal');
+    modal.style.display = 'none';
+    document.body.style.overflow = 'auto'; // Restore scrolling
+}
+
+// Update the showContent function
+function showContent(sectionId) {
+    const content = document.getElementById(sectionId).innerHTML;
+    showModal(content);
+}
+
+// Add event listener for clicking outside modal to close
+window.onclick = function(event) {
+    const modal = document.getElementById('contentModal');
+    if (event.target === modal) {
+        closeModal();
+    }
+}
+
+// Make sure to expose the functions
+window.showContent = showContent;
+window.closeModal = closeModal;
 
 // Function to show the subscription prompt
 function showSubscriptionPrompt() {
