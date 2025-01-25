@@ -328,11 +328,11 @@ body {
 .modal-content {
     position: relative;
     background-color: #fff;
-    margin: 15% auto;
+    margin: 5% auto; /* Changed from 15% to 5% to appear higher */
     padding: 20px;
     width: 80%;
     max-width: 700px;
-    max-height: 70vh;
+    max-height: 80vh; /* Increased from 70vh to 80vh */
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
@@ -368,6 +368,19 @@ body {
     .modal-body {
         max-height: calc(80vh - 40px);
     }
+.button-section {
+    margin: 20px 0;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+@media (max-width: 768px) {
+    .button-section {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+}
 }
 
 
