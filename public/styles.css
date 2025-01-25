@@ -199,7 +199,17 @@ body {
 }
 
 /* Info Panel and Subscription Prompt */
+/* Update info panel background color to match buttons */
 .info-panel,
+.subscription-prompt {
+    background-color: #024BAD;  /* Changed to match button color */
+    border: 1px solid #013b87;  /* Darker border */
+}
+
+/* Remove duplicate button section at bottom */
+.bottom-section {
+    display: none;  /* Hide the bottom section since we're using modals now */
+}
 .subscription-prompt {
     display: none;
     position: fixed;
@@ -379,6 +389,56 @@ body {
     .button-section {
         flex-direction: row;
         flex-wrap: wrap;
+    }
+}
+.footer {
+    background-color: #ffffff;
+    padding: 20px 0;
+    margin-top: auto;
+    border-top: 1px solid #ddd;
+}
+
+.footer-content {
+    width: 90%;
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.footer-section {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.footer a {
+    color: #024BAD;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.footer a:hover {
+    text-decoration: underline;
+}
+
+.footer p {
+    color: #666;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+@media (max-width: 600px) {
+    .footer-content {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .footer-section {
+        justify-content: center;
     }
 }
 }
