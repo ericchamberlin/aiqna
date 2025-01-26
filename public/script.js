@@ -413,19 +413,20 @@ async function fetchContentSections() {
 
         // Generate buttons
         const buttonSection = document.querySelector('.button-section');
-        buttonSection.innerHTML = ''; // Clear existing buttons
         
+        // Create static buttons first
+        buttonSection.innerHTML = `
+            <button onclick="showContent('ai-vocabulary')">AI Vocabulary</button>
+            <button onclick="showContent('ai-answers')">AI Answers</button>
+            <button onclick="showContent('ai-placeholder')">AI Tutorials</button>
+            <button onclick="showEbookPrompt()">Free eBook</button>
+        `;
+
         // Generate content containers
         const bottomSection = document.querySelector('.bottom-section');
         bottomSection.innerHTML = ''; // Clear existing content
 
         sections.forEach(section => {
-            // Create button
-            const button = document.createElement('button');
-            button.textContent = section.title;
-            button.onclick = () => showContent(`section_${section.id}`);
-            buttonSection.appendChild(button);
-
             // Create content section
             const contentDiv = document.createElement('div');
             contentDiv.id = `section_${section.id}`;
