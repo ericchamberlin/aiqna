@@ -17,6 +17,7 @@
                 <button onclick="showContent('ai-vocabulary')">AI Vocabulary</button>
                 <button onclick="showContent('ai-answers')">AI Answers</button>
                 <button onclick="showContent('ai-placeholder')">AI Tutorials</button>
+                <button onclick="showEbookPrompt()">Free eBook</button>
             </div>
 
             <div class="question-form">
@@ -159,6 +160,14 @@
 
     <script type="module" src="/script.js"></script>
 </body>
+<!-- Add before the closing body tag -->
+    <div class="subscription-prompt" id="ebookPrompt">
+        <h2>Get Your Free AI eBook</h2>
+        <p>Enter your email to receive our comprehensive AI guide!</p>
+        <input type="email" id="ebookEmail" placeholder="Enter your email">
+        <button onclick="subscribeForEbook()">Get eBook</button>
+        <button onclick="closeEbookPrompt()">No Thanks</button>
+    </div>
 <footer class="footer">
         <div class="footer-content">
             <div class="footer-section">

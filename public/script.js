@@ -247,7 +247,48 @@ function closeSubscriptionPrompt() {
     const subscriptionPrompt = document.getElementById('subscriptionPrompt');
     subscriptionPrompt.style.display = 'none';
 }
+// Function to show the ebook prompt
+function showEbookPrompt() {
+    const ebookPrompt = document.getElementById('ebookPrompt');
+    ebookPrompt.style.display = 'block';
+}
 
+// Function to close the ebook prompt
+function closeEbookPrompt() {
+    const ebookPrompt = document.getElementById('ebookPrompt');
+    ebookPrompt.style.display = 'none';
+}
+
+// Function to handle ebook subscription
+async function subscribeForEbook() {
+    const email = document.getElementById('ebookEmail').value.trim();
+    if (email) {
+        try {
+            const { error } = await supabase
+                .from('ebook_subscribers')
+                .insert([{ email }]);
+
+            if (error) {
+                console.error('Error subscribing for ebook:', error);
+                alert('Failed to subscribe. Please try again.');
+                return;
+            }
+
+            alert('Thank you! The eBook will be sent to your email shortly.');
+            closeEbookPrompt();
+        } catch (error) {
+            console.error('Unexpected error:', error);
+            alert('An unexpected error occurred while subscribing.');
+        }
+    } else {
+        alert('Please enter a valid email address.');
+    }
+}
+
+// Add to window object
+window.showEbookPrompt = showEbookPrompt;
+window.closeEbookPrompt = closeEbookPrompt;
+window.subscribeForEbook = subscribeForEbook;
 // Function to subscribe a user
 async function subscribeUser() {
     const email = document.getElementById('subscriptionEmail').value.trim();
