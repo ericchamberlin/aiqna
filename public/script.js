@@ -265,8 +265,11 @@ async function subscribeForEbook() {
     if (email) {
         try {
             const { error } = await supabase
-                .from('ebook_subscribers')
-                .insert([{ email }]);
+                .from('subscribers')
+                .insert([{ 
+                    email,
+                    source: 'ebook'  // Add source to track where subscription came from
+                }]);
 
             if (error) {
                 console.error('Error subscribing for ebook:', error);
