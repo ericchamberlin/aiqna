@@ -269,8 +269,9 @@ async function subscribeForEbook() {
                 .from('subscriptions')
                 .insert([{ 
                     email,
-                    source: 'ebook'
-                }]);  // Remove .select() to simplify the query
+                    source: 'ebook_prompt_popup',  // More detailed source
+                    subscription_type: 'ebook'     // Add subscription type
+                }]);
 
             if (error) {
                 console.error('Detailed subscription error:', error);
@@ -302,7 +303,8 @@ async function subscribeUser() {
                 .from('subscriptions')
                 .insert([{ 
                     email,
-                    source: 'newsletter'
+                    source: 'upvote_popup',         // More detailed source
+                    subscription_type: 'newsletter'  // Add subscription type
                 }]);
 
             if (error) {
