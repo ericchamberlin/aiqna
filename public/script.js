@@ -266,7 +266,7 @@ async function subscribeForEbook() {
         try {
             console.log('Attempting to subscribe with email:', email);
             const { data, error } = await supabase
-                .from('subscribers')
+                .from('subscriptions')  // Changed from 'subscribers' to 'subscriptions'
                 .insert([{ 
                     email,
                     source: 'ebook'
@@ -305,7 +305,7 @@ async function subscribeUser() {
     if (email) {
         try {
             const { error } = await supabase
-                .from('subscribers')
+                .from('subscriptions')  // Changed from 'subscribers' to 'subscriptions'
                 .insert([{ email }]);
 
             if (error) {
