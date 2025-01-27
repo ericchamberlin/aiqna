@@ -264,23 +264,30 @@ async function subscribeForEbook() {
     const email = document.getElementById('ebookEmail').value.trim();
     if (email) {
         try {
-            const { error } = await supabase
+            console.log('Attempting to subscribe with email:', email);
+            const { data, error } = await supabase
                 .from('subscribers')
                 .insert([{ 
                     email,
-                    source: 'ebook'  // Add source to track where subscription came from
-                }]);
+                    source: 'ebook'
+                }])
+                .select();
 
             if (error) {
-                console.error('Error subscribing for ebook:', error);
-                alert('Failed to subscribe. Please try again.');
+                console.error('Detailed subscription error:', {
+                    code: error.code,
+                    message: error.message,
+                    details: error.details
+                });
+                alert(`Subscription failed: ${error.message}`);
                 return;
             }
 
+            console.log('Subscription successful:', data);
             alert('Thank you! The eBook will be sent to your email shortly.');
             closeEbookPrompt();
         } catch (error) {
-            console.error('Unexpected error:', error);
+            console.error('Detailed error:', error);
             alert('An unexpected error occurred while subscribing.');
         }
     } else {
