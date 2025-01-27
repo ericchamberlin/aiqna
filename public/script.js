@@ -266,24 +266,18 @@ async function subscribeForEbook() {
         try {
             console.log('Attempting to subscribe with email:', email);
             const { data, error } = await supabase
-                .from('subscriptions')  // Changed from 'subscribers' to 'subscriptions'
+                .from('subscriptions')
                 .insert([{ 
                     email,
                     source: 'ebook'
-                }])
-                .select();
+                }]);  // Remove .select() to simplify the query
 
             if (error) {
-                console.error('Detailed subscription error:', {
-                    code: error.code,
-                    message: error.message,
-                    details: error.details
-                });
-                alert(`Subscription failed: ${error.message}`);
+                console.error('Detailed subscription error:', error);
+                alert('Failed to subscribe. Please try again later.');
                 return;
             }
 
-            console.log('Subscription successful:', data);
             alert('Thank you! The eBook will be sent to your email shortly.');
             closeEbookPrompt();
         } catch (error) {
@@ -304,16 +298,16 @@ async function subscribeUser() {
     const email = document.getElementById('subscriptionEmail').value.trim();
     if (email) {
         try {
-            const { error } = await supabase
+            const { data, error } = await supabase  // Add data to response check
                 .from('subscriptions')
                 .insert([{ 
                     email,
-                    source: 'newsletter'  // Add source field for regular subscriptions
+                    source: 'newsletter'
                 }]);
 
             if (error) {
                 console.error('Error subscribing user:', error);
-                alert('Failed to subscribe. Please try again.');
+                alert('Failed to subscribe. Please try again later.');
                 return;
             }
 
