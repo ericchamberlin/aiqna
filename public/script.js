@@ -305,8 +305,11 @@ async function subscribeUser() {
     if (email) {
         try {
             const { error } = await supabase
-                .from('subscriptions')  // Changed from 'subscribers' to 'subscriptions'
-                .insert([{ email }]);
+                .from('subscriptions')
+                .insert([{ 
+                    email,
+                    source: 'newsletter'  // Add source field for regular subscriptions
+                }]);
 
             if (error) {
                 console.error('Error subscribing user:', error);
