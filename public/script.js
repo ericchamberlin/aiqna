@@ -11,11 +11,112 @@ let questions = [];
 let sortBy = 'latest';
 
 // Fetch historical questions and set up real-time subscription
+// Add this after initializePage() function
+// Add this new function to fetch videos
+async function fetchTutorialVideos() {
+    try {
+        const { data, error } = await supabase
+            .from('video_content')
+            .select('*')
+            .eq('section', 'tutorials')
+            .eq('active', true)
+            .order('display_order', { ascending: true });
+
+        if (error) throw error;
+        return data || [];
+    } catch (error) {
+        console.error('Error fetching tutorial videos:', error);
+        return [];
+    }
+}
+
+// Add new function to fetch AI Answer videos
+async function fetchAIAnswerVideos() {
+    try {
+        const { data, error } = await supabase
+            .from('video_content')
+            .select('*')
+            .eq('section', 'ai_answers')
+            .eq('active', true)
+            .order('display_order', { ascending: true });
+
+        if (error) throw error;
+        console.log("Fetched AI Answer Videos:", data);
+        return data || [];
+    } catch (error) {
+        console.error('Error fetching AI Answer videos:', error);
+        return [];
+    }
+}
+
+// Update createContentSections to be async
+// Update createContentSections function
+async function createContentSections() {
+    const bottomSection = document.querySelector('.bottom-section');
+    if (!bottomSection) return;
+
+    // Fetch AI Answer videos
+    const aiAnswerVideos = await fetchAIAnswerVideos();
+
+    if (!document.getElementById('ai-vocabulary')) {
+        bottomSection.innerHTML += `
+            <div id="ai-vocabulary" class="content-section" style="display: none;">
+                <h2>AI Vocabulary</h2>
+                <dl>
+                    <dt>Artificial Intelligence (AI)</dt>
+                    <dd>Computer systems capable of performing tasks that typically require human intelligence.</dd>
+                    <dt>Machine Learning (ML)</dt>
+                    <dd>A subset of AI that enables systems to learn and improve from experience.</dd>
+                    <dt>Neural Network</dt>
+                    <dd>Computing systems inspired by biological neural networks in human brains.</dd>
+                </dl>
+            </div>
+            <div id="ai-answers" class="content-section" style="display: none;">
+                <h2>AI Answers</h2>
+                <div class="video-content" style="max-width: 800px; margin: 0 auto;">
+                    ${aiAnswerVideos.map(video => `
+                        <div class="video-item" style="margin-bottom: 20px; padding: 15px; border: 1px solid #eee; border-radius: 8px;">
+                            <h3>${video.title}</h3>
+                            ${video.description ? `<p style="margin: 10px 0;">${video.description}</p>` : ''}
+                            <div class="video-actions" style="margin-top: 15px;">
+                                <a href="${video.youtube_url}" target="_blank" rel="noopener"
+                                   style="display: inline-block; padding: 8px 16px; background: #1a73e8; color: white; text-decoration: none; border-radius: 4px;">
+                                    Watch Video
+                                </a>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+            <div id="ai-placeholder" class="content-section" style="display: none;">
+                <h2>AI Tutorials</h2>
+                ${tutorialVideos.length > 0 ? `
+                    <div class="tutorials-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                        ${tutorialVideos.map(video => `
+                            <div class="tutorial-item">
+                                <h3>${video.title}</h3>
+                                ${video.description ? `<p>${video.description}</p>` : ''}
+                                <a href="${video.youtube_url}" target="_blank" class="tutorial-link">
+                                    Watch Tutorial
+                                </a>
+                            </div>
+                        `).join('')}
+                    </div>
+                ` : `
+                    <p>Future tutorials will be available here. Have a suggestion for what you'd like to learn?</p>
+                `}
+            </div>
+        `;
+    }
+}
+
+// Update initializePage to handle async createContentSections
 async function initializePage() {
     try {
         await fetchQuestions();
-        await fetchContentSections();  // Add this line
+        await createContentSections();
         setupRealTimeSubscription();
+        showInfoPanel();
         console.log('Page initialized successfully');
     } catch (error) {
         console.error('Error initializing page:', error);
@@ -217,11 +318,44 @@ function closeModal() {
     modal.style.display = 'none';
     document.body.style.overflow = 'auto'; // Restore scrolling
 }
+function extractYouTubeID(url) {
+    const regExp = /(?:youtube\.com\/(?:[^\/]+\/[^\/]+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
+    const match = url.match(regExp);
+    return match && match[1] ? match[1] : null;
+}
+async function showContent(sectionId) {
+    const modal = document.getElementById('contentModal');
+    const modalBody = modal.querySelector('.modal-body');
 
-// Update the showContent function
-function showContent(sectionId) {
-    const content = document.getElementById(sectionId).innerHTML;
-    showModal(content);
+    // Fetch AI Answer videos from Supabase
+    const aiAnswerVideos = await fetchAIAnswerVideos();
+    console.log("Rendering Videos in Modal:", aiAnswerVideos);
+
+    if (aiAnswerVideos.length === 0) {
+        modalBody.innerHTML = `<p>No AI Answer videos available.</p>`;
+    } else {
+        modalBody.innerHTML = `
+            <h2>AI Answers</h2>
+            <div class="video-content" style="max-width: 800px; margin: 0 auto;">
+                ${aiAnswerVideos.map(video => {
+                    const videoID = extractYouTubeID(video.youtube_url);
+                    return `
+                        <div class="video-item" style="margin-bottom: 20px; padding: 15px; border: 1px solid #eee; border-radius: 8px;">
+                            <h3>${video.title}</h3>
+                            <p>${video.description || "No description available."}</p>
+                            <iframe width="100%" height="400px" 
+                                src="https://www.youtube.com/embed/${videoID}" 
+                                frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+                            </iframe>
+                        </div>
+                    `;
+                }).join('')}
+            </div>
+        `;
+    }
+
+    modal.style.display = 'block';
+    document.body.style.overflow = 'hidden';
 }
 
 // Add event listener for clicking outside modal to close
@@ -264,18 +398,19 @@ async function subscribeForEbook() {
     const email = document.getElementById('ebookEmail').value.trim();
     if (email) {
         try {
-            console.log('Attempting to subscribe with email:', email);
             const { data, error } = await supabase
                 .from('subscriptions')
                 .insert([{ 
-                    email,
-                    source: 'ebook_prompt_popup',  // More detailed source
-                    subscription_type: 'ebook'     // Add subscription type
+                    email: email
                 }]);
 
             if (error) {
-                console.error('Detailed subscription error:', error);
-                alert('Failed to subscribe. Please try again later.');
+                if (error.code === '23505') { // Unique constraint violation
+                    alert('Thank you for your interest! This email is already subscribed to receive our eBook.');
+                } else {
+                    console.error('Detailed subscription error:', error);
+                    alert('Failed to subscribe. Please try again later.');
+                }
                 return;
             }
 
@@ -299,17 +434,19 @@ async function subscribeUser() {
     const email = document.getElementById('subscriptionEmail').value.trim();
     if (email) {
         try {
-            const { data, error } = await supabase  // Add data to response check
+            const { data, error } = await supabase
                 .from('subscriptions')
                 .insert([{ 
-                    email,
-                    source: 'upvote_popup',         // More detailed source
-                    subscription_type: 'newsletter'  // Add subscription type
+                    email: email
                 }]);
 
             if (error) {
-                console.error('Error subscribing user:', error);
-                alert('Failed to subscribe. Please try again later.');
+                if (error.code === '23505') { // Unique constraint violation
+                    alert('Thank you for your interest! This email is already subscribed to our newsletter.');
+                } else {
+                    console.error('Error subscribing user:', error);
+                    alert('Failed to subscribe. Please try again later.');
+                }
                 return;
             }
 
@@ -472,7 +609,7 @@ function generateAnswersHTML(fields) {
                 <p>${item.answer}</p>
             `).join('')}
         </div>
-    `;
+    `; // ✅ Closing the template literal correctly
 }
 
 // Call this function when page loads
