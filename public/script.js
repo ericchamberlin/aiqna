@@ -373,24 +373,112 @@ window.closeModal = closeModal;
 // Function to show the subscription prompt
 function showSubscriptionPrompt() {
     const subscriptionPrompt = document.getElementById('subscriptionPrompt');
+    subscriptionPrompt.innerHTML = `
+        <div class="subscription-overlay" style="
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        ">
+            <div class="subscription-container" style="
+                width: 90%;
+                max-width: 600px;
+                height: 80vh;
+                background: white;
+                border-radius: 8px;
+                position: relative;
+            ">
+                <button onclick="closeSubscriptionPrompt()" style="
+                    position: absolute;
+                    right: 10px;
+                    top: 10px;
+                    background: none;
+                    border: none;
+                    font-size: 24px;
+                    cursor: pointer;
+                    z-index: 1001;
+                ">×</button>
+                <iframe 
+                    src="https://aiqna.beehiiv.com/subscribe" 
+                    style="
+                        width: 100%;
+                        height: 100%;
+                        border: none;
+                        border-radius: 8px;
+                    "
+                ></iframe>
+            </div>
+        </div>
+    `;
     subscriptionPrompt.style.display = 'block';
 }
 
-// Function to close the subscription prompt
+// Keep the close function
 function closeSubscriptionPrompt() {
     const subscriptionPrompt = document.getElementById('subscriptionPrompt');
     subscriptionPrompt.style.display = 'none';
+    subscriptionPrompt.innerHTML = '';
 }
 // Function to show the ebook prompt
 function showEbookPrompt() {
     const ebookPrompt = document.getElementById('ebookPrompt');
+    ebookPrompt.innerHTML = `
+        <div class="ebook-overlay" style="
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        ">
+            <div class="ebook-container" style="
+                width: 90%;
+                max-width: 600px;
+                height: 80vh;
+                background: white;
+                border-radius: 8px;
+                position: relative;
+            ">
+                <button onclick="closeEbookPrompt()" style="
+                    position: absolute;
+                    right: 10px;
+                    top: 10px;
+                    background: none;
+                    border: none;
+                    font-size: 24px;
+                    cursor: pointer;
+                    z-index: 1001;
+                ">×</button>
+                <iframe 
+                    src="https://chamberlin5.gumroad.com/l/ixuug" 
+                    style="
+                        width: 100%;
+                        height: 100%;
+                        border: none;
+                        border-radius: 8px;
+                    "
+                ></iframe>
+            </div>
+        </div>
+    `;
     ebookPrompt.style.display = 'block';
 }
 
-// Function to close the ebook prompt
+// Update the close function to clear the content
 function closeEbookPrompt() {
     const ebookPrompt = document.getElementById('ebookPrompt');
     ebookPrompt.style.display = 'none';
+    ebookPrompt.innerHTML = '';
 }
 
 // Function to handle ebook subscription
