@@ -61,15 +61,28 @@ async function createContentSections() {
     if (!document.getElementById('ai-vocabulary')) {
         bottomSection.innerHTML += `
             <div id="ai-vocabulary" class="content-section" style="display: none;">
-                <h2>AI Vocabulary</h2>
-                <dl>
-                    <dt>Artificial Intelligence (AI)</dt>
-                    <dd>Computer systems capable of performing tasks that typically require human intelligence.</dd>
-                    <dt>Machine Learning (ML)</dt>
-                    <dd>A subset of AI that enables systems to learn and improve from experience.</dd>
-                    <dt>Neural Network</dt>
-                    <dd>Computing systems inspired by biological neural networks in human brains.</dd>
-                </dl>
+                <div style="max-width: 800px; margin: 0 auto;">
+                    <h2>Combined Basics of AI Terminology</h2>
+                    <dl style="margin: 0; padding: 0;">
+                        <dt style="font-weight: bold; margin-top: 20px; font-size: 1.2em;">Artificial Intelligence (AI)</dt>
+                        <dd style="margin-left: 0; margin-top: 8px; line-height: 1.5;">
+                            <strong>Definition:</strong> A branch of computer science that enables machines to perform tasks that typically require human intelligence, such as learning, decision-making, and problem-solving.<br>
+                            <strong>Example:</strong> AI is like a really smart assistant that can help you plan a trip, suggest recipes based on what's in your fridge, or even recognize your voice when you ask your phone a question.
+                        </dd>
+                        
+                        <dt style="font-weight: bold; margin-top: 20px; font-size: 1.2em;">Algorithm</dt>
+                        <dd style="margin-left: 0; margin-top: 8px; line-height: 1.5;">
+                            <strong>Definition:</strong> A set of rules or steps a computer follows to solve a problem or complete a task.<br>
+                            <strong>Example:</strong> An algorithm is like a recipe for baking a cake—it gives the computer step-by-step instructions to follow.
+                        </dd>
+                        
+                        <dt style="font-weight: bold; margin-top: 20px; font-size: 1.2em;">Machine Learning (ML)</dt>
+                        <dd style="margin-left: 0; margin-top: 8px; line-height: 1.5;">
+                            <strong>Definition:</strong> A subset of AI that enables systems to learn and improve from experience.<br>
+                            <strong>Example:</strong> Like how a child learns to recognize cats after seeing many pictures of cats, ML systems learn patterns from data.
+                        </dd>
+                    </dl>
+                </div>
             </div>
             <div id="ai-answers" class="content-section" style="display: none;">
                 <h2>AI Answers</h2>
@@ -326,37 +339,93 @@ function extractYouTubeID(url) {
 async function showContent(sectionId) {
     const modal = document.getElementById('contentModal');
     const modalBody = modal.querySelector('.modal-body');
-
-    // Fetch AI Answer videos from Supabase
-    const aiAnswerVideos = await fetchAIAnswerVideos();
-    console.log("Rendering Videos in Modal:", aiAnswerVideos);
-
-    if (aiAnswerVideos.length === 0) {
-        modalBody.innerHTML = `<p>No AI Answer videos available.</p>`;
-    } else {
+  
+    switch(sectionId) {
+      case 'ai-vocabulary':
+        const vocabContent = document.getElementById('ai-vocabulary').innerHTML;
         modalBody.innerHTML = `
-            <h2>AI Answers</h2>
-            <div class="video-content" style="max-width: 800px; margin: 0 auto;">
-                ${aiAnswerVideos.map(video => {
-                    const videoID = extractYouTubeID(video.youtube_url);
-                    return `
-                        <div class="video-item" style="margin-bottom: 20px; padding: 15px; border: 1px solid #eee; border-radius: 8px;">
-                            <h3>${video.title}</h3>
-                            <p>${video.description || "No description available."}</p>
-                            <iframe width="100%" height="400px" 
-                                src="https://www.youtube.com/embed/${videoID}" 
-                                frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
-                            </iframe>
-                        </div>
-                    `;
-                }).join('')}
-            </div>
+          <div style="
+            max-width: 800px; 
+            margin: 0 auto; 
+            padding: 20px;
+  
+            /* Force single column */
+            column-count: 1 !important;
+            -webkit-column-count: 1 !important;
+            -moz-column-count: 1 !important;
+            column-gap: 0 !important;
+          ">
+            ${vocabContent}
+          </div>
         `;
-    }
+  
+        // Style terms and definitions
+        modalBody.querySelectorAll('dt').forEach(term => {
+          term.style.cssText = `
+            font-weight: bold;
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: #333;
+            break-inside: avoid;
+            page-break-inside: avoid;
+            -webkit-column-break-inside: avoid;
+          `;
+        });
+        modalBody.querySelectorAll('dd').forEach(def => {
+          def.style.cssText = `
+            margin-left: 0;
+            margin-top: 8px;
+            margin-bottom: 24px;
+            line-height: 1.5;
+            color: #666;
+            break-inside: avoid;
+            page-break-inside: avoid;
+            -webkit-column-break-inside: avoid;
+          `;
+        });
+        break;
 
-    modal.style.display = 'block';
-    document.body.style.overflow = 'hidden';
-}
+        case 'ai-answers':
+            // Fetch AI Answer videos from Supabase
+            const aiAnswerVideos = await fetchAIAnswerVideos();
+            if (aiAnswerVideos.length === 0) {
+                modalBody.innerHTML = `<p>No AI Answer videos available.</p>`;
+            } else {
+                modalBody.innerHTML = `
+                    <h2>AI Answers</h2>
+                    <div class="video-content" style="max-width: 800px; margin: 0 auto;">
+                        ${aiAnswerVideos.map(video => {
+                            const videoID = extractYouTubeID(video.youtube_url);
+                            return `
+                                <div class="video-item" style="margin-bottom: 20px; padding: 15px; border: 1px solid #eee; border-radius: 8px;">
+                                    <h3>${video.title}</h3>
+                                    <p>${video.description || "No description available."}</p>
+                                    <iframe width="100%" height="400px" 
+                                        src="https://www.youtube.com/embed/${videoID}" 
+                                        frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+                                    </iframe>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                `;
+            }
+            break;
+
+        case 'ai-placeholder':
+            modalBody.innerHTML = `
+                <h2>AI Tutorials</h2>
+                <p>Future Tutorials will be here...have a suggestion for the first one?</p>
+            `;
+            break;
+
+            default:
+                modalBody.innerHTML = `<p>Content not found</p>`;
+            }
+          
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+          }
 
 // Add event listener for clicking outside modal to close
 window.onclick = function(event) {
