@@ -458,11 +458,21 @@ function showSubscriptionPrompt() {
             <div class="subscription-container" style="
                 width: 90%;
                 max-width: 600px;
-                height: 80vh;
                 background: white;
                 border-radius: 8px;
                 position: relative;
+                border: 4px solid #1a4789;
+                overflow: hidden;
             ">
+                <div style="
+                    background: #1a4789;
+                    color: white;
+                    padding: 15px;
+                    text-align: center;
+                    font-size: 1.1em;
+                ">
+                    Sign up for our free newsletter to never miss a new tutorial or video
+                </div>
                 <button onclick="closeSubscriptionPrompt()" style="
                     position: absolute;
                     right: 10px;
@@ -472,14 +482,15 @@ function showSubscriptionPrompt() {
                     font-size: 24px;
                     cursor: pointer;
                     z-index: 1001;
+                    color: white;
                 ">×</button>
                 <iframe 
                     src="https://aiqna.beehiiv.com/subscribe" 
                     style="
                         width: 100%;
-                        height: 100%;
+                        height: 75vh;
                         border: none;
-                        border-radius: 8px;
+                        border-radius: 0 0 8px 8px;
                     "
                 ></iframe>
             </div>
